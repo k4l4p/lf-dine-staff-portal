@@ -3,6 +3,11 @@ import { QrScanner } from '@yudiel/react-qr-scanner'
 import Image from 'next/image'
 import React, { Fragment, useState } from 'react'
 
+interface Res_body {
+  success: boolean
+  response: string
+}
+
 const success = (
   <div className="flex flex-col gap-4 items-center">
     <Image alt="success" src={'/success.svg'} height={45} width={45} />
@@ -31,8 +36,21 @@ const ScanQRCode = () => {
   const [isScanned, setIsScanned] = useState<boolean>(false)
   const [isOpenModal, setIsOpenModal] = useState(false)
 	const [status, setStatus] = useState(success)
+  const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? 'http://localhost:8080'
 
-  const redeem = (url: string) => {}
+  const redeem = async (obj: string) => {
+    const req = new Request(endpoint + '/qr/redeem', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: obj
+    })
+    const res = await fetch(req)
+    if (!res.ok) throw new Error('Network Error')
+    const res_body = await res.json() as Res_body
+    return res_body.success
+  }
   if (!isScanned)
     return (
       <QrScanner
