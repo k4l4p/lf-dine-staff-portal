@@ -33,8 +33,8 @@ const fail = (
 )
 
 const ScanQRCode = () => {
-  const [isScanned, setIsScanned] = useState<boolean>(false)
-  const [isOpenModal, setIsOpenModal] = useState(false)
+  const [isScanned, setIsScanned] = useState<boolean>(true)
+  const [isOpenModal, setIsOpenModal] = useState(true)
 	const [status, setStatus] = useState(success)
   const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? 'http://localhost:8080'
 
@@ -56,7 +56,13 @@ const ScanQRCode = () => {
       <QrScanner
         onDecode={(result) => {
           setIsScanned(true)
-          redeem(result)
+          redeem(result).then(() => {
+            setStatus(success)
+            setIsOpenModal(true)
+          }).catch(() =>{
+            setStatus(fail)
+            setIsOpenModal(true)
+          })
         }}
         onError={(error) => console.log(error?.message)}
       />
