@@ -33,8 +33,8 @@ const fail = (
 )
 
 const ScanQRCode = () => {
-  const [isScanned, setIsScanned] = useState<boolean>(true)
-  const [isOpenModal, setIsOpenModal] = useState(true)
+  const [isScanned, setIsScanned] = useState<boolean>(false)
+  const [isOpenModal, setIsOpenModal] = useState(false)
 	const [status, setStatus] = useState(success)
   const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT ?? 'http://localhost:8080'
 
